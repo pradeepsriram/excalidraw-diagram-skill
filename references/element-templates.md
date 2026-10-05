@@ -1,6 +1,6 @@
 # Element Templates
 
-Copy-paste JSON templates for each Excalidraw element type. The `strokeColor` and `backgroundColor` values are placeholders — always pull actual colors from `color-palette.md` based on the element's semantic purpose.
+Copy-paste JSON templates for each Excalidraw element type. The `strokeColor` and `backgroundColor` values are placeholders — always pull actual colors from the theme (`python3 theme.py`, see `color-palette.md`) based on the element's role.
 
 Sizes for block-style diagrams: block text 26-36, headers 36, group labels and arrow captions 22-26, title 56-60. Keep text to 1-3 words (see SKILL.md text budget). Group box = `rectangle` with `backgroundColor: "transparent"`, `strokeStyle: "dashed"`, no bound text; its label is a free-floating text at its top-left.
 
@@ -17,7 +17,7 @@ Sizes for block-style diagrams: block text 26-36, headers 36, group labels and a
   "fontFamily": 3,
   "textAlign": "left",
   "verticalAlign": "top",
-  "strokeColor": "<title color from palette>",
+  "strokeColor": "<title role text>",
   "backgroundColor": "transparent",
   "fillStyle": "solid",
   "strokeWidth": 1,
@@ -45,7 +45,7 @@ Sizes for block-style diagrams: block text 26-36, headers 36, group labels and a
   "id": "line1",
   "x": 100, "y": 100,
   "width": 0, "height": 200,
-  "strokeColor": "<structural line color from palette>",
+  "strokeColor": "<divider/spine stroke>",
   "backgroundColor": "transparent",
   "fillStyle": "solid",
   "strokeWidth": 2,
@@ -72,8 +72,8 @@ Sizes for block-style diagrams: block text 26-36, headers 36, group labels and a
   "id": "dot1",
   "x": 94, "y": 94,
   "width": 12, "height": 12,
-  "strokeColor": "<marker dot color from palette>",
-  "backgroundColor": "<marker dot color from palette>",
+  "strokeColor": "<dot role>",
+  "backgroundColor": "<dot role>",
   "fillStyle": "solid",
   "strokeWidth": 1,
   "strokeStyle": "solid",
@@ -97,8 +97,8 @@ Sizes for block-style diagrams: block text 26-36, headers 36, group labels and a
   "type": "rectangle",
   "id": "elem1",
   "x": 100, "y": 100, "width": 180, "height": 90,
-  "strokeColor": "<stroke from palette based on semantic purpose>",
-  "backgroundColor": "<fill from palette based on semantic purpose>",
+  "strokeColor": "<role stroke>",
+  "backgroundColor": "<role fill>",
   "fillStyle": "solid",
   "strokeWidth": 2,
   "strokeStyle": "solid",
@@ -130,7 +130,7 @@ Sizes for block-style diagrams: block text 26-36, headers 36, group labels and a
   "fontFamily": 3,
   "textAlign": "center",
   "verticalAlign": "middle",
-  "strokeColor": "<text color — match parent shape's stroke or use 'on light/dark fills' from palette>",
+  "strokeColor": "<role text>",
   "backgroundColor": "transparent",
   "fillStyle": "solid",
   "strokeWidth": 1,
@@ -157,7 +157,7 @@ Sizes for block-style diagrams: block text 26-36, headers 36, group labels and a
   "type": "arrow",
   "id": "arrow1",
   "x": 282, "y": 145, "width": 118, "height": 0,
-  "strokeColor": "<arrow color — typically matches source element's stroke from palette>",
+  "strokeColor": "<arrow role stroke, or the source block's stroke>",
   "backgroundColor": "transparent",
   "fillStyle": "solid",
   "strokeWidth": 2,

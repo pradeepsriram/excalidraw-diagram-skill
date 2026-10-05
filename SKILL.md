@@ -7,8 +7,8 @@ description: Create clean block-style Excalidraw diagrams (.excalidraw JSON) —
 
 Generate `.excalidraw` files that read at a glance: **simple colored blocks, very little text, arrows that show flow.** The viewer should get the structure in ten seconds without reading anything long. Detail belongs in the surrounding doc, not in the diagram.
 
-**Setup:** for renderer/dependency setup see `README.md`.
-**Colors:** `references/color-palette.md` is the single source of truth. Read it first.
+**Setup:** for renderer/dependency setup see `README.md`. **Changing the theme of an existing diagram:** `python3 references/theme.py --recolor <file> --to <theme>`, then re-render.
+**Theme:** colors come from a theme. Default is **Cool Classics**; the user can ask for any other (`python3 references/theme.py --list`). Details in `references/color-palette.md`.
 **Layouts:** `references/layouts.md` lists layout options (flow, hub-and-spoke, cycle, tree, comparison, timeline, swimlane/stack). Read it to pick one.
 
 ## Why so little text
@@ -41,7 +41,7 @@ Choose the layout from the *shape of the idea*, not from habit: see `references/
 
 ## Color = meaning
 
-Pick colors from the palette by role (e.g. group/family, new vs changed, infrastructure, external) and keep each role consistent across the diagram. Use a dashed stroke for optional/alternate paths, a thicker stroke (3) for the one thing the diagram is about. A highlighted "NEW" / "CHANGED" pair (orange / yellow) is the standard way to show a delta; the rest stays in calm family colors. Always `opacity: 100`, `roughness: 0`.
+Colors are theme *roles* (`group_light`, `group_mid`, `accent`, `foundation`, `new`, `changed`, ...), resolved to hex by `theme.py`. Pick the role by what the block is, keep each role consistent across the diagram, and take fill, stroke and text from the same role row. Use a dashed stroke for optional/alternate paths and the `emphasis` role (stroke 3) for the one thing the diagram is about. `new` / `changed` is the standard way to show a delta; the rest stays in calm family colors. Always `opacity: 100`, `roughness: 0`.
 
 ## Arrows
 
@@ -56,16 +56,17 @@ Diagrams are viewed zoomed out, so go big: block text `fontSize` 26-36, headers 
 
 ## Process
 
-1. **List the blocks and links** in your head: name each component with its short real name, pick a layout, mark what is new/changed if it's a delta. If you're about to write a long label, you're describing instead of naming — cut it.
-2. **Lay out on a grid** following the chosen layout in `references/layouts.md`.
-3. **Write the JSON** using `references/element-templates.md`. For more than ~40 elements, build it in sections (e.g. title and frame, then each group, then cross-group arrows, then legend) with one Edit per section; don't try to emit the whole file in one response. Use descriptive string IDs (`g_comp`, `a_sink_to_comp`) and write the JSON by hand — a generator script adds indirection that makes fixes harder.
-4. **Render and look** (below). Fix and re-render until it's clean.
+1. **Pick the theme and resolve it:** `cd ~/.claude/skills/excalidraw-diagram/references && python3 theme.py [theme]` (no argument = Cool Classics). Use the printed hex values for everything, and the canvas background for `appState.viewBackgroundColor`.
+2. **List the blocks and links** in your head: name each component with its short real name, pick a layout, mark what is new/changed if it's a delta. If you're about to write a long label, you're describing instead of naming — cut it.
+3. **Lay out on a grid** following the chosen layout in `references/layouts.md`.
+4. **Write the JSON** using `references/element-templates.md`. For more than ~40 elements, build it in sections (e.g. title and frame, then each group, then cross-group arrows, then legend) with one Edit per section; don't try to emit the whole file in one response. Use descriptive string IDs (`g_comp`, `a_sink_to_comp`) and write the JSON by hand — a generator script adds indirection that makes fixes harder.
+5. **Render and look** (below). Fix and re-render until it's clean.
 
 ## JSON skeleton
 
 ```json
 { "type": "excalidraw", "version": 2, "source": "https://excalidraw.com",
-  "elements": [], "appState": { "viewBackgroundColor": "#ffffff", "gridSize": 20 }, "files": {} }
+  "elements": [], "appState": { "viewBackgroundColor": "<canvas from theme>", "gridSize": 20 }, "files": {} }
 ```
 
 ## Render & validate (required)
@@ -76,6 +77,6 @@ JSON can't show overlap or clipping, so render and view the PNG:
 cd ~/.claude/skills/excalidraw-diagram/references && uv run python render_excalidraw.py <path-to-file.excalidraw>
 ```
 
-Read the PNG, then check: text fits its block; nothing overlaps; arrows land on the intended blocks and don't cut through others; spacing and alignment are even; the legend has an entry for every color **and line style** used (a dashed arrow with no legend entry is a mystery); **and the text is sparse** — if any block reads like a sentence, shorten it. Fix and re-render (usually 2-3 passes).
+Read the PNG, then check: text fits its block; nothing overlaps; arrows land on the intended blocks and don't cut through others; spacing and alignment are even; the colors are the theme's (no stray hex values); the legend has an entry for every color **and line style** used (a dashed arrow with no legend entry is a mystery); **and the text is sparse** — if any block reads like a sentence, shorten it. Fix and re-render (usually 2-3 passes).
 
 First-time setup: `cd references && uv sync && uv run playwright install chromium`.

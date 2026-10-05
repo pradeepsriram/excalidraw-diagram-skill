@@ -1,83 +1,39 @@
-# Color Palette & Brand Style
+# Color Themes
 
-**This is the single source of truth for all colors and brand-specific styles.** To customize diagrams for your own brand, edit this file — everything else in the skill is universal.
+**Colors come from a theme, never from memory.** Run the resolver once per diagram and use its hex values for every shape, text and line:
 
----
+```bash
+cd ~/.claude/skills/excalidraw-diagram/references && python3 theme.py            # default theme
+python3 theme.py earth-tones                                                      # a named theme
+python3 theme.py --list                                                           # all themes
+```
 
-## Shape Colors (Semantic)
+The resolver prints a table of **roles** (fill / stroke / text / strokeWidth / style) plus the canvas background to put in `appState.viewBackgroundColor`. Always `opacity: 100`.
 
-Colors encode meaning, not decoration. Each semantic purpose has a fill/stroke pair.
+## Default and switching
 
-| Semantic Purpose | Fill | Stroke |
-|------------------|------|--------|
-| Primary/Neutral | `#3b82f6` | `#1e3a5f` |
-| Secondary | `#60a5fa` | `#1e3a5f` |
-| Tertiary | `#93c5fd` | `#1e3a5f` |
-| Start/Trigger | `#fed7aa` | `#c2410c` |
-| End/Success | `#a7f3d0` | `#047857` |
-| Warning/Reset | `#fee2e2` | `#dc2626` |
-| Decision | `#fef3c7` | `#b45309` |
-| AI/LLM | `#ddd6fe` | `#6d28d9` |
-| Inactive/Disabled | `#dbeafe` | `#1e40af` (use dashed stroke) |
-| Error | `#fecaca` | `#b91c1c` |
+- **Default theme: Cool Classics** (`cool-classics`), a blue family with teal and violet accents. Use it unless the user asks otherwise.
+- The user can pick any theme by name ("use earth tones", "dark mode", "make it warm") — run `theme.py <name>`. For a vague request ("change the theme"), run `theme.py --list` and ask which one; "dark" means `dark-mauve` or `dark-flagship-terrastruct`, "warm" means one of `earth-tones`, `vanilla-nitro-cola`, `buttered-toast`, `orange-creamsicle`.
+- To restyle an **existing** diagram without redrawing it: `python3 theme.py --recolor diagram.excalidraw --to <theme> [--from <current theme>] [-o out.excalidraw]`, then re-render. `--from` defaults to Cool Classics.
+- Themes are D2's catalog (https://d2lang.com/tour/themes/), stored in `themes.json`. To add a custom theme, add an entry with the same slots (B1-B6, AA2/4/5, AB4/5, N1-N7) and it appears in `--list`.
 
-**Rule**: Always pair a darker stroke with a lighter fill for contrast.
+## Roles (what each means)
 
-### Block-diagram roles
+| Role | Use for |
+|---|---|
+| `title` | Diagram title, section headings (text only) |
+| `text_body` / `text_muted` | Free-floating labels / captions and secondary notes |
+| `group_light` | Default block; first lane or family |
+| `group_mid` | Second lane or family; secondary blocks |
+| `emphasis` | The one thing the diagram is about (strokeWidth 3) |
+| `accent` | A third family (control, service, external actor) |
+| `foundation` | Lowest layer: storage, hardware, platform, infrastructure |
+| `new` / `changed` / `error` | Status highlights for a delta or failure. Same hues in every theme so they stay recognizable |
+| `inverse` | A dark block that should pop (channel, queue, store) |
+| `note` | Neutral aside ("unchanged"), 2-4 words |
+| `arrow` | Default arrow color; or use the source block's `stroke` |
+| `divider` / `spine` / `boundary` | Lane dividers (dashed) / tier spine / hard boundary line |
+| `group_border` | Dashed unfilled group rectangle (fill stays transparent) |
+| `dot` | Timeline and spine marker dots |
 
-| Role | Fill | Stroke |
-|------|------|--------|
-| Lane A / default family (light) | `#dbeafe` | `#1e40af` |
-| Lane B family (mid) | `#93c5fd` | `#1e3a5f` |
-| Emphasis block in a family | `#60a5fa` | `#1e3a5f` (strokeWidth 3) |
-| Lane C family (control/service) | `#ddd6fe` | `#6d28d9` |
-| NEW | `#fed7aa` | `#c2410c` (strokeWidth 3) |
-| CHANGED | `#fef3c7` | `#b45309` |
-| Foundation / infrastructure (lowest layer, storage, hardware, platform) | `#a7f3d0` | `#047857` |
-| Dark accent (a channel, store or queue worth standing out) | `#1e293b` | `#1e293b`, text `#93c5fd` |
-| Note (unchanged/aside) | `#f1f5f9` | `#64748b` |
-
-Text inside blocks: `#374151` on light fills, or the family's dark stroke color (`#1e3a5f`, `#7c2d12` on orange/yellow, `#4c1d95` on lavender). Region boxes: no fill, dashed, family stroke. Lane dividers: `#cbd5e1` dashed.
-
----
-
-## Text Colors (Hierarchy)
-
-Use color on free-floating text to create visual hierarchy without containers.
-
-| Level | Color | Use For |
-|-------|-------|---------|
-| Title | `#1e40af` | Section headings, major labels |
-| Subtitle | `#3b82f6` | Subheadings, secondary labels |
-| Body/Detail | `#64748b` | Descriptions, annotations, metadata |
-| On light fills | `#374151` | Text inside light-colored shapes |
-| On dark fills | `#ffffff` | Text inside dark-colored shapes |
-
----
-
-## Dark Block Colors
-
-Used for a dark "data/socket/queue" block (short label only; no code or JSON in diagrams).
-
-| Artifact | Background | Text Color |
-|----------|-----------|------------|
-| Code snippet | `#1e293b` | Syntax-colored (language-appropriate) |
-| JSON/data example | `#1e293b` | `#22c55e` (green) |
-
----
-
-## Default Stroke & Line Colors
-
-| Element | Color |
-|---------|-------|
-| Arrows | Use the stroke color of the source element's semantic purpose |
-| Structural lines (dividers, trees, timelines) | Primary stroke (`#1e3a5f`) or Slate (`#64748b`) |
-| Marker dots (fill + stroke) | Primary fill (`#3b82f6`) |
-
----
-
-## Background
-
-| Property | Value |
-|----------|-------|
-| Canvas background | `#ffffff` |
+**Rules:** pair each fill with its own `stroke` and `text` from the same role row (text is chosen for contrast, so it stays readable on dark themes). Keep each role consistent across a diagram. Do not invent colors; if nothing fits, use `group_light`. A legend entry per role used makes meaning explicit.

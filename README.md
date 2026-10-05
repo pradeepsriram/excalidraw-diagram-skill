@@ -9,7 +9,7 @@ Compatible with any coding agent that supports skills. For agents that read from
 - **Simple blocks, minimal text.** Labels are names, not sentences; the layout is picked to match the idea. See `references/layouts.md`.
 - **Color carries meaning.** Palette roles for groups, new vs changed, infrastructure, and so on.
 - **Built-in visual validation.** A Playwright-based render pipeline lets the agent see its own output, catch layout issues (overlapping text, misaligned arrows, unbalanced spacing), and fix them in a loop before delivering.
-- **Brand-customizable.** All colors and brand styles live in a single file (`references/color-palette.md`). Swap it out and every diagram follows your palette.
+- **Color themes.** 20 themes from [D2's catalog](https://d2lang.com/tour/themes/), default **Cool Classics**. Ask for another by name ("use earth tones", "dark mode"), or restyle an existing diagram with `theme.py --recolor`.
 
 ## Installation
 
@@ -44,9 +44,16 @@ Ask your coding agent to create a diagram:
 
 The skill handles the rest — concept mapping, layout, JSON generation, rendering, and visual validation.
 
-## Customize Colors
+## Themes
 
-Edit `references/color-palette.md` to match your brand. Everything else in the skill is universal design methodology.
+```bash
+cd references
+python3 theme.py --list                       # all themes (default: cool-classics)
+python3 theme.py earth-tones                  # resolved role colors for a theme
+python3 theme.py --recolor my.excalidraw --to dark-mauve   # restyle an existing diagram
+```
+
+Or just tell the agent: "draw this in the grape soda theme". To add your own theme, add an entry to `references/themes.json` with the same slots (B1-B6, AA2/4/5, AB4/5, N1-N7).
 
 ## File Structure
 
@@ -54,7 +61,10 @@ Edit `references/color-palette.md` to match your brand. Everything else in the s
 excalidraw-diagram/
   SKILL.md                          # Design methodology + workflow
   references/
-    color-palette.md                # Brand colors (edit this to customize)
+    color-palette.md                # Theme roles and how to switch themes
+    themes.json                     # Theme palettes (from D2's catalog)
+    theme.py                        # Resolve / list / recolor themes
+    layouts.md                      # Layout options
     element-templates.md            # JSON templates for each element type
     json-schema.md                  # Excalidraw JSON format reference
     render_excalidraw.py            # Render .excalidraw to PNG
