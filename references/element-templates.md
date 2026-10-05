@@ -2,6 +2,8 @@
 
 Copy-paste JSON templates for each Excalidraw element type. The `strokeColor` and `backgroundColor` values are placeholders — always pull actual colors from `color-palette.md` based on the element's semantic purpose.
 
+Sizes for block-style diagrams: block text 26-36, headers 36, group labels and arrow captions 22-26, title 56-60. Keep text to 1-3 words (see SKILL.md text budget). Group box = `rectangle` with `backgroundColor: "transparent"`, `strokeStyle: "dashed"`, no bound text; its label is a free-floating text at its top-left.
+
 ## Free-Floating Text (no container)
 ```json
 {
@@ -124,7 +126,7 @@ Copy-paste JSON templates for each Excalidraw element type. The `strokeColor` an
   "width": 120, "height": 25,
   "text": "Process",
   "originalText": "Process",
-  "fontSize": 16,
+  "fontSize": 32,
   "fontFamily": 3,
   "textAlign": "center",
   "verticalAlign": "middle",

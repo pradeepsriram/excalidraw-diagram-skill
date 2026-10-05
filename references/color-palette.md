@@ -23,6 +23,22 @@ Colors encode meaning, not decoration. Each semantic purpose has a fill/stroke p
 
 **Rule**: Always pair a darker stroke with a lighter fill for contrast.
 
+### Block-diagram roles
+
+| Role | Fill | Stroke |
+|------|------|--------|
+| Lane A / default family (light) | `#dbeafe` | `#1e40af` |
+| Lane B family (mid) | `#93c5fd` | `#1e3a5f` |
+| Emphasis block in a family | `#60a5fa` | `#1e3a5f` (strokeWidth 3) |
+| Lane C family (control/service) | `#ddd6fe` | `#6d28d9` |
+| NEW | `#fed7aa` | `#c2410c` (strokeWidth 3) |
+| CHANGED | `#fef3c7` | `#b45309` |
+| Foundation / infrastructure (lowest layer, storage, hardware, platform) | `#a7f3d0` | `#047857` |
+| Dark accent (a channel, store or queue worth standing out) | `#1e293b` | `#1e293b`, text `#93c5fd` |
+| Note (unchanged/aside) | `#f1f5f9` | `#64748b` |
+
+Text inside blocks: `#374151` on light fills, or the family's dark stroke color (`#1e3a5f`, `#7c2d12` on orange/yellow, `#4c1d95` on lavender). Region boxes: no fill, dashed, family stroke. Lane dividers: `#cbd5e1` dashed.
+
 ---
 
 ## Text Colors (Hierarchy)
@@ -39,9 +55,9 @@ Use color on free-floating text to create visual hierarchy without containers.
 
 ---
 
-## Evidence Artifact Colors
+## Dark Block Colors
 
-Used for code snippets, data examples, and other concrete evidence inside technical diagrams.
+Used for a dark "data/socket/queue" block (short label only; no code or JSON in diagrams).
 
 | Artifact | Background | Text Color |
 |----------|-----------|------------|
